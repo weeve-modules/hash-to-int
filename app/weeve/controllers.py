@@ -50,5 +50,5 @@ def main_routes(app: Flask):
         sent = send_data(module_output)
         if sent:
             return "", HTTP_CODES['NO_CONTENT']
-        app.logger.error("Error while transfering")
+        app.logger.error("Error while transferring")
         return "Error while transfering", HTTP_CODES['INTERNAL_SERVER_ERROR']
