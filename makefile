@@ -30,6 +30,9 @@ help: ## This help.
 build: ## Build the container
 	docker build -t $(ACCOUNT_NAME)/$(APP_NAME) . -f Dockerfile
 
+dev:
+	nodemon main.py
+
 run: ## Run container on port configured in `config.env`
 	docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)
 

@@ -11,9 +11,18 @@
 
 Run the dev-container.
 
-`npm run start`
+Inside the container, run `make dev`.
 
-# Testing manual
+The makefile loads the environment variables contained in `config.env` and `deploy.env`.
+
+The makefile executes `nodemon main.py`.
+
+# Testing manually
+
+curl --header "Content-Type: application/json" \
+     --request POST \
+     --data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
+     localhost:9001
 
 # Notes
 

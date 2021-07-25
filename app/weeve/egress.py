@@ -5,6 +5,8 @@ import time
 from requests import post
 from app.config import APPLICATION, WEEVE
 
+from logging import getLogger
+log = getLogger(__name__)
 
 def send_data(data: json, timestamp=time.time()) -> bool:
     """Sends data to the next module
@@ -22,6 +24,8 @@ def send_data(data: json, timestamp=time.time()) -> bool:
         "outputUnit": APPLICATION['OUTPUT_UNIT'],
         f"{WEEVE['MODULE_NAME']}Time": timestamp
     }
+
+    log.info(return_body)
 
     try:
         post(url=f"{WEEVE['EGRESS_API_HOST']}", json=return_body)
