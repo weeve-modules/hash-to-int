@@ -7,6 +7,13 @@
 | tags         | Python, Flask, Docker, Weeve                               |
 | authors      | Marcus Jones |
 
+# Developers
+
+Run the dev-container.
+
+`npm run start`
+
+# Testing manual
 
 # Notes
 

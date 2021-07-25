@@ -1,5 +1,7 @@
 #! /bin/bash
 
+echo "Dev container starting script"
+
 WORK_DIR=/workspace/devcontainer
 
 
