@@ -24,8 +24,8 @@ def send_data(data: json, timestamp=time.time()) -> bool:
         "outputUnit": APPLICATION['OUTPUT_UNIT'],
         f"{WEEVE['MODULE_NAME']}Time": timestamp
     }
-
-    log.info(f"Sending payload to {WEEVE['EGRESS_API_HOST']}")
+    egress_path = f"{WEEVE['EGRESS_API_PROTOCOL']}://{WEEVE['EGRESS_API_HOST']}:{WEEVE['EGRESS_PORT']}"
+    log.info(f"Sending payload to {egress_path}")
     log.info(f"Payload: {return_body}")
 
     try:
