@@ -37,6 +37,8 @@ run: ## Run container on port configured in `config.env`
 	docker run --rm \
 		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_PORT) \
 		-e MODULE_NAME=$(MODULE_NAME) \
+		-e HANDLER_HOST=0.0.0.0 \
+		-e HANDLER_PORT=9001 \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
 
 # docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)

@@ -13,6 +13,8 @@ def module_main(parsed_data):
         [string, string]: [data, error]
     """
     try:
-        return parsed_data, None
+        integer = int(parsed_data)
+        print(integer)
+        # return parsed_data, None
     except Exception:
         return None, "Unable to perform the module logic"
