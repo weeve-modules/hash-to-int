@@ -28,14 +28,18 @@ help: ## This help.
 # .phony: create_image
 
 build: ## Build the container
-	docker build -t $(ACCOUNT_NAME)/$(APP_NAME) . -f Dockerfile
+	docker build -t $(ACCOUNT_NAME)/$(MODULE_NAME) . -f Dockerfile
 
 dev:
 	nodemon main.py
 
 run: ## Run container on port configured in `config.env`
-	docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)
+	docker run --rm \
+		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_PORT) \
+		-e MODULE_NAME=$(MODULE_NAME) \
+		$(ACCOUNT_NAME)/$(MODULE_NAME)
 
+# docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)
 # run_image:
 # 	docker run -p 8000:5000 --rm boilerplate:latest
 # .phony: run_image
@@ -47,6 +51,22 @@ lint:
 install_local:
 	pip3 install -r requirements.txt
 .phony: install_local
+
+listentest: ## Run a listener container and receive messages from this container
+	docker network create $(NETWORK_NAME) || true
+	docker run --detach --network=$(NETWORK_NAME) --rm \
+		-e PORT=8000 \
+		-e LOG_HTTP_BODY=true \
+		-e LOG_HTTP_HEADERS=true \
+		--name echo jmalloc/echo-server
+	docker run --rm \
+		--network=$(NETWORK_NAME)
+		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_PORT) \
+		$(ACCOUNT_NAME)/$(MODULE_NAME)
+	docker run \
+		--network=$(NETWORK_NAME) --rm \
+		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_PORT)
+		$(ACCOUNT_NAME)/$(APP_NAME)
 
 run_local:
 	 python main.py
