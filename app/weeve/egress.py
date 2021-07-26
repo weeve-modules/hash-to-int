@@ -25,7 +25,8 @@ def send_data(data: json, timestamp=time.time()) -> bool:
         f"{WEEVE['MODULE_NAME']}Time": timestamp
     }
 
-    log.info(return_body)
+    log.info(f"Sending payload to {WEEVE['EGRESS_API_HOST']}")
+    log.info(f"Payload: {return_body}")
 
     try:
         post(url=f"{WEEVE['EGRESS_API_HOST']}", json=return_body)

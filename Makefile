@@ -35,10 +35,11 @@ dev:
 
 run: ## Run container on port configured in `config.env`
 	docker run --rm \
+		-p $(HANDLER_PORT):$(HANDLER_PORT) \
 		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_PORT) \
 		-e MODULE_NAME=$(MODULE_NAME) \
 		-e HANDLER_HOST=0.0.0.0 \
-		-e HANDLER_PORT=9001 \
+		-e HANDLER_PORT=$(HANDLER_PORT) \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
 
 # docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)
@@ -54,21 +55,43 @@ install_local:
 	pip3 install -r requirements.txt
 .phony: install_local
 
+curltest: ## Send sample data to the
+	curl --header "Content-Type: application/json" \
+		--request POST \
+		--data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
+		localhost:$(HANDLER_PORT)
+
 listentest: ## Run a listener container and receive messages from this container
 	docker network create $(NETWORK_NAME) || true
-	docker run --detach --network=$(NETWORK_NAME) --rm \
-		-e PORT=8000 \
+	echo "Starting listener container"
+	docker run --detach --rm \
+		--network=$(NETWORK_NAME)  \
+		-e PORT=$(EGRESS_PORT)  \
 		-e LOG_HTTP_BODY=true \
 		-e LOG_HTTP_HEADERS=true \
-		--name echo jmalloc/echo-server
-	docker run --rm \
-		--network=$(NETWORK_NAME)
-		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_PORT) \
+		--name echo \
+		jmalloc/echo-server
+	echo "Starting module container"
+	docker run --detach --rm \
+		--network=$(NETWORK_NAME) \
+		-p $(HANDLER_PORT):$(HANDLER_PORT) \
+		-e EGRESS_API_HOST=http://echo:$(EGRESS_PORT) \
+		-e MODULE_NAME=$(MODULE_NAME) \
+		-e HANDLER_HOST=0.0.0.0 \
+		-e HANDLER_PORT=$(HANDLER_PORT) \
+		--name $(MODULE_NAME) \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
-	docker run \
-		--network=$(NETWORK_NAME) --rm \
-		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_PORT)
-		$(ACCOUNT_NAME)/$(APP_NAME)
+	echo "Waiting for 2 seconds..."
+	sleep 2
+	echo "Sending test payload"
+	curl --header "Content-Type: application/json" \
+		--request POST \
+		--data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
+		localhost:$(HANDLER_PORT)
+	echo "Result as seen in listener:"
+	docker logs echo
+	echo "Cleanup"
+	docker container stop echo $(MODULE_NAME)
 
 run_local:
 	 python main.py

@@ -18,11 +18,63 @@ The makefile loads the environment variables contained in `config.env` and `depl
 The makefile executes `nodemon main.py`.
 
 # Testing manually
+A manual test environment can be created using the simulated environment of a data service.
+
+For manual testing, it is recommended to run the test in TMUX with 3 panes.
+
+```
+(                        Host Machine                                  )
+                              (          Docker network               )
+ [curl POST] --port-forward-> ( ->  [MODULE] -> [listening container] )
+
+```
+
+A processing module is only attached to a docker network and therefore has visibility / is visible only within that network. Create a docker network with `docker network create dtestnet`.
+
+The egress side of the container is simulated with a simple webserver which echo the response and prints to the terminal.
+
+Start the listening container to listen on the egress target port. Logging is enabled for debugging.
+```bash
+docker run --rm \
+     --network=dtestnet \
+     -e PORT=8000 \
+     -e LOG_HTTP_BODY=true \
+     -e LOG_HTTP_HEADERS=true \
+     --name echo \
+     jmalloc/echo-server
+```
+
+In a second terminal, run the module inside the same docker network. The module is exposed through port 9001 to the host machine.
+```bash
+docker run --rm \
+     --network=dtestnet \
+     -p 9001:9001 \
+     -e EGRESS_API_HOST=http://echo:8000 \
+     -e MODULE_NAME=hash-to-int \
+     -e HANDLER_HOST=0.0.0.0 \
+     -e HANDLER_PORT=9001 \
+     --name hash-to-int \
+     weevenetwork/hash-to-int
+```
+
+In the third terminal, simulate the ingress side of the container by sending a hash value from the host into the docker network forwarded port;
+```bash
+curl --header "Content-Type: application/json" \
+     --request POST \
+     --data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
+     localhost:9001
+```
+
+(Old):
 
 curl --header "Content-Type: application/json" \
      --request POST \
      --data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
      localhost:9001
+curl --header "Content-Type: application/json" --request POST --data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' localhost:9001
+curl --request POST  http://localhost:9001
+
+
 
 # Notes
 
