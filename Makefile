@@ -96,3 +96,11 @@ listentest: ## Run a listener container and receive messages from this container
 run_local:
 	 python main.py
 .phony: run_local
+
+push: ## Push to dockerhub, needs credentials!
+	docker push $(ACCOUNT_NAME)/$(MODULE_NAME):latest
+
+pushrm: ## Push to dockerhub AND add description, needs additionally the pushrm tool!
+## https://github.com/christian-korneck/docker-pushrm
+	docker push $(ACCOUNT_NAME)/$(MODULE_NAME):latest
+	docker pushrm $(ACCOUNT_NAME)/$(MODULE_NAME):latest --short $(DESCRIPTION)
