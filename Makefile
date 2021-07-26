@@ -62,6 +62,7 @@ curltest: ## Send sample data to the
 		localhost:$(HANDLER_PORT)
 
 listentest: ## Run a listener container and receive messages from this container
+	make build
 	docker network create $(NETWORK_NAME) || true
 	echo "Starting listener container"
 	docker run --detach --rm \
@@ -75,9 +76,11 @@ listentest: ## Run a listener container and receive messages from this container
 	docker run --detach --rm \
 		--network=$(NETWORK_NAME) \
 		-p $(HANDLER_PORT):$(HANDLER_PORT) \
-		-e EGRESS_API_HOST=http://echo:$(EGRESS_PORT) \
+		-e EGRESS_API_PROTOCOL=$(EGRESS_API_PROTOCOL) \
+		-e EGRESS_API_HOST=echo \
+		-e EGRESS_PORT=$(EGRESS_PORT) \
 		-e MODULE_NAME=$(MODULE_NAME) \
-		-e HANDLER_HOST=0.0.0.0 \
+		-e HANDLER_HOST=$(HANDLER_HOST) \
 		-e HANDLER_PORT=$(HANDLER_PORT) \
 		--name $(MODULE_NAME) \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
@@ -91,7 +94,7 @@ listentest: ## Run a listener container and receive messages from this container
 	echo "Result as seen in listener:"
 	docker logs echo
 	echo "Cleanup"
-	docker container stop echo $(MODULE_NAME)
+	## docker container stop echo $(MODULE_NAME)
 
 run_local:
 	 python main.py

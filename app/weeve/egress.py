@@ -8,6 +8,7 @@ from app.config import APPLICATION, WEEVE
 from logging import getLogger
 log = getLogger(__name__)
 
+
 def send_data(data: json, timestamp=time.time()) -> bool:
     """Sends data to the next module
 
@@ -29,7 +30,8 @@ def send_data(data: json, timestamp=time.time()) -> bool:
     log.info(f"Payload: {return_body}")
 
     try:
-        post(url=f"{WEEVE['EGRESS_API_HOST']}", json=return_body)
+        post(url=egress_path, json=return_body)
         return True
-    except Exception:
+    except Exception as e:
+        log.error(e)
         return False
