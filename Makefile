@@ -94,7 +94,7 @@ listentest: ## Run a listener container and receive messages from this container
 	echo "Result as seen in listener:"
 	docker logs echo
 	echo "Cleanup"
-	## docker container stop echo $(MODULE_NAME)
+	docker container stop echo $(MODULE_NAME)
 
 run_local:
 	 python main.py
