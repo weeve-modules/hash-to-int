@@ -1,0 +1,61 @@
+version: 0.0.1
+name: hash-to-int
+description: Return the integer representation of a byte string.
+icon: https://icons-020-demo.s3.eu-central-1.amazonaws.com/USB.png
+type: process
+tags:
+  - hash
+  - integer
+  - byte
+  - string
+categories:
+  - id: category
+    name: Experimental
+image:
+  name: weevenetwork/hash-to-int
+  tag: latest
+environments:
+  - key: EGRESS_API_PROTOCOL
+    description: Egress API protocol.
+    value: ''
+    default: http
+    type: string
+    name: Egress API Protocol
+  - key: EGRESS_API_HOST
+    description: Egress API endpoint Host address where data is sent.
+    value: ''
+    default: echo
+    type: string
+    name: Egress API Host
+  - key: EGRESS_PORT
+    description: Egress API endpoint Port where data is sent.
+    value: ''
+    default: 8000
+    type: integer
+    name: Egress Port
+  - key: MODULE_NAME
+    description: Module name.
+    value: hash-to-int
+    default: hash-to-int
+    type: string
+    name: Module Name
+  - key: HANDLER_HOST
+    description: Handler API Host address.
+    value: ''
+    default: 0.0.0.0
+    type: string
+    name: Handler Host
+  - key: HANDLER_PORT
+    description: Handler API Host Port.
+    value: ''
+    default: 9001
+    type: integer
+    name: Handler Port
+document:
+  ports: []
+  volumes: []
+  restart_policy:
+    condition: on-failure
+    delay: 10s
+    max_attempts: 3
+    window: 120s
