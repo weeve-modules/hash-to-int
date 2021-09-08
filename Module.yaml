@@ -17,19 +17,19 @@ image:
 environments:
   - key: EGRESS_API_PROTOCOL
     description: Egress API protocol.
-    value: ''
+    value: ""
     default: http
     type: string
     name: Egress API Protocol
   - key: EGRESS_API_HOST
     description: Egress API endpoint Host address where data is sent.
-    value: ''
+    value: ""
     default: echo
     type: string
     name: Egress API Host
-  - key: EGRESS_PORT
+  - key: EGRESS_API_PORT
     description: Egress API endpoint Port where data is sent.
-    value: ''
+    value: ""
     default: 8000
     type: integer
     name: Egress Port
@@ -41,13 +41,13 @@ environments:
     name: Module Name
   - key: HANDLER_HOST
     description: Handler API Host address.
-    value: ''
+    value: ""
     default: 0.0.0.0
     type: string
     name: Handler Host
   - key: HANDLER_PORT
     description: Handler API Host Port.
-    value: ''
+    value: ""
     default: 9001
     type: integer
     name: Handler Port

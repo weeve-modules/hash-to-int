@@ -36,7 +36,7 @@ dev:
 run: ## Run container on port configured in `config.env`
 	docker run --rm \
 		-p $(HANDLER_PORT):$(HANDLER_PORT) \
-		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_PORT) \
+		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_API_PORT) \
 		-e MODULE_NAME=$(MODULE_NAME) \
 		-e HANDLER_HOST=0.0.0.0 \
 		-e HANDLER_PORT=$(HANDLER_PORT) \
@@ -67,7 +67,7 @@ listentest: ## Run a listener container and receive messages from this container
 	echo "Starting listener container"
 	docker run --detach --rm \
 		--network=$(NETWORK_NAME)  \
-		-e PORT=$(EGRESS_PORT)  \
+		-e PORT=$(EGRESS_API_PORT)  \
 		-e LOG_HTTP_BODY=true \
 		-e LOG_HTTP_HEADERS=true \
 		--name echo \
@@ -78,7 +78,7 @@ listentest: ## Run a listener container and receive messages from this container
 		-p $(HANDLER_PORT):$(HANDLER_PORT) \
 		-e EGRESS_API_PROTOCOL=$(EGRESS_API_PROTOCOL) \
 		-e EGRESS_API_HOST=echo \
-		-e EGRESS_PORT=$(EGRESS_PORT) \
+		-e EGRESS_API_PORT=$(EGRESS_API_PORT) \
 		-e MODULE_NAME=$(MODULE_NAME) \
 		-e HANDLER_HOST=$(HANDLER_HOST) \
 		-e HANDLER_PORT=$(HANDLER_PORT) \

@@ -9,7 +9,7 @@ assert env("HANDLER_HOST")
 assert env("HANDLER_PORT")
 assert env("EGRESS_API_PROTOCOL")
 assert env("EGRESS_API_HOST")
-assert env("EGRESS_PORT")
+assert env("EGRESS_API_PORT")
 
 WEEVE = {
     "MODULE_NAME": env("MODULE_NAME"),
@@ -17,7 +17,7 @@ WEEVE = {
     "HANDLER_PORT": env("HANDLER_PORT"),
     "EGRESS_API_PROTOCOL": env("EGRESS_API_PROTOCOL"),
     "EGRESS_API_HOST": env("EGRESS_API_HOST"),
-    "EGRESS_PORT": env("EGRESS_PORT")
+    "EGRESS_API_PORT": env("EGRESS_API_PORT")
 }
 
 pprint(WEEVE)

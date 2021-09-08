@@ -1,11 +1,11 @@
 # SHA 256 into INT
-|              |                                                            |
-| ------------ | ---------------------------------------------------------- |
-| name         | sha256-string-to-int         |
-| version      | v0.0.1                                                     |
+|              |                                                               |
+| ------------ | ------------------------------------------------------------- |
+| name         | sha256-string-to-int                                          |
+| version      | v0.0.1                                                        |
 | docker image | [weevenetwork/sha256-string-to-int](https://linktodockerhub/) |
-| tags         | Python, Flask, Docker, Weeve                               |
-| authors      | Marcus Jones |
+| tags         | Python, Flask, Docker, Weeve                                  |
+| authors      | Marcus Jones                                                  |
 
 # Developers
 
@@ -51,7 +51,7 @@ docker run --rm \
      -p 9001:9001 \
      -e EGRESS_API_PROTOCOL=http \
      -e EGRESS_API_HOST=echo \
-     -e EGRESS_PORT=8000 \
+     -e EGRESS_API_PORT=8000 \
      -e MODULE_NAME=hash-to-int \
      -e HANDLER_HOST=0.0.0.0 \
      -e HANDLER_PORT=9001 \
