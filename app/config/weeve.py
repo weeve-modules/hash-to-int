@@ -17,7 +17,7 @@ WEEVE = {
     "HANDLER_PORT": env("HANDLER_PORT", "80"),
     "EGRESS_API_PROTOCOL": env("EGRESS_API_PROTOCOL", "http"),
     "EGRESS_API_HOST": env("EGRESS_API_HOST"),
-    "EGRESS_API_PORT": env("EGRESS_API_PORT", "80")
+    "EGRESS_API_PORT": env("EGRESS_API_PORT", "")
 }
 
 pprint(WEEVE)
