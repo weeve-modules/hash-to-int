@@ -4,12 +4,12 @@ All constants specific to weeve
 from app.utils.env import env
 from pprint import pprint
 
-assert env("MODULE_NAME")
-assert env("HANDLER_HOST")
-assert env("HANDLER_PORT")
-assert env("EGRESS_API_PROTOCOL")
+# assert env("MODULE_NAME")
+# assert env("HANDLER_HOST")
+# assert env("HANDLER_PORT")
+# assert env("EGRESS_API_PROTOCOL")
 assert env("EGRESS_API_HOST")
-assert env("EGRESS_API_PORT")
+# assert env("EGRESS_API_PORT")
 
 WEEVE = {
     "MODULE_NAME": env("MODULE_NAME"),
