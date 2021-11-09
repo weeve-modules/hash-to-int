@@ -40,6 +40,7 @@ run: ## Run container on port configured in `config.env`
 		-e MODULE_NAME=$(MODULE_NAME) \
 		-e MODULE_TYPE=$(MODULE_TYPE) \
 		-e INGRESS_HOST=0.0.0.0 \
+		-e INGRESS_PATH=$(INGRESS_PATH) \
 		-e INGRESS_PORT=$(INGRESS_PORT) \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
 
@@ -53,7 +54,7 @@ lint:
 .phony: lint
 
 install_local:
-	pip3 install -r requirements.txt
+	pip3 install -r ./image/requirements.txt
 .phony: install_local
 
 curltest: ## Send sample data to the
@@ -78,7 +79,7 @@ listentest: ## Run a listener container and receive messages from this container
 		--network=$(NETWORK_NAME) \
 		-p $(INGRESS_PORT):$(INGRESS_PORT) \
 		-e EGRESS_SCHEME=$(EGRESS_SCHEME) \
-		-e EGRESS_HOST=echo \
+		-e EGRESS_URL=echo \
 		-e EGRESS_PORT=$(EGRESS_PORT) \
 		-e MODULE_NAME=$(MODULE_NAME) \
 		-e INGRESS_HOST=$(INGRESS_HOST) \
@@ -98,7 +99,7 @@ listentest: ## Run a listener container and receive messages from this container
 	docker container stop echo $(MODULE_NAME)
 
 run_local:
-	 python main.py
+	 python3 ./image/src/main.py
 .phony: run_local
 
 push: ## Push to dockerhub, needs credentials!
