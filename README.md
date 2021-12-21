@@ -3,7 +3,7 @@
 | ------------ | ------------------------------------------------------------- |
 | name         | sha256-string-to-int                                          |
 | version      | v0.0.1                                                        |
-| docker image | [weevenetwork/sha256-string-to-int](https://linktodockerhub/) |
+| docker image | [weevenetwork/hash-to-int](https://hub.docker.com/r/weevenetwork/hash-to-int) |
 | tags         | Python, Flask, Docker, Weeve                                  |
 | authors      | Marcus Jones                                                  |
 
@@ -49,12 +49,12 @@ In a second terminal, run the module inside the same docker network. The module 
 docker run --rm \
      --network=dtestnet \
      -p 9001:9001 \
-     -e EGRESS_API_PROTOCOL=http \
-     -e EGRESS_API_HOST=echo \
-     -e EGRESS_API_PORT=8000 \
+     -e EGRESS_SCHEME=http \
+     -e EGRESS_HOST=echo \
+     -e EGRESS_PORT=8000 \
      -e MODULE_NAME=hash-to-int \
-     -e HANDLER_HOST=0.0.0.0 \
-     -e HANDLER_PORT=9001 \
+     -e INGRESS_HOST=0.0.0.0 \
+     -e INGRESS_PORT=9001 \
      --name hash-to-int \
      weevenetwork/hash-to-int
 ```

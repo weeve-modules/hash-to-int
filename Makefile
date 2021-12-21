@@ -28,18 +28,20 @@ help: ## This help.
 # .phony: create_image
 
 build: ## Build the container
-	docker build -t $(ACCOUNT_NAME)/$(MODULE_NAME) . -f Dockerfile
+	docker build -t $(ACCOUNT_NAME)/$(MODULE_NAME) . -f ./image/Dockerfile
 
 dev:
 	nodemon main.py
 
 run: ## Run container on port configured in `config.env`
 	docker run --rm \
-		-p $(HANDLER_PORT):$(HANDLER_PORT) \
-		-e EGRESS_API_HOST=$(EGRESS_HOST_PATH):$(EGRESS_API_PORT) \
+		-p $(INGRESS_PORT):$(INGRESS_PORT) \
+		-e EGRESS_URL=$(EGRESS_URL) \
 		-e MODULE_NAME=$(MODULE_NAME) \
-		-e HANDLER_HOST=0.0.0.0 \
-		-e HANDLER_PORT=$(HANDLER_PORT) \
+		-e MODULE_TYPE=$(MODULE_TYPE) \
+		-e INGRESS_HOST=0.0.0.0 \
+		-e INGRESS_PATH=$(INGRESS_PATH) \
+		-e INGRESS_PORT=$(INGRESS_PORT) \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
 
 # docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)
@@ -52,14 +54,14 @@ lint:
 .phony: lint
 
 install_local:
-	pip3 install -r requirements.txt
+	pip3 install -r ./image/requirements.txt
 .phony: install_local
 
 curltest: ## Send sample data to the
 	curl --header "Content-Type: application/json" \
 		--request POST \
 		--data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
-		localhost:$(HANDLER_PORT)
+		localhost:$(INGRESS_PORT)
 
 listentest: ## Run a listener container and receive messages from this container
 	make build
@@ -67,7 +69,7 @@ listentest: ## Run a listener container and receive messages from this container
 	echo "Starting listener container"
 	docker run --detach --rm \
 		--network=$(NETWORK_NAME)  \
-		-e PORT=$(EGRESS_API_PORT)  \
+		-e PORT=$(EGRESS_PORT)  \
 		-e LOG_HTTP_BODY=true \
 		-e LOG_HTTP_HEADERS=true \
 		--name echo \
@@ -75,13 +77,13 @@ listentest: ## Run a listener container and receive messages from this container
 	echo "Starting module container"
 	docker run --detach --rm \
 		--network=$(NETWORK_NAME) \
-		-p $(HANDLER_PORT):$(HANDLER_PORT) \
-		-e EGRESS_API_PROTOCOL=$(EGRESS_API_PROTOCOL) \
-		-e EGRESS_API_HOST=echo \
-		-e EGRESS_API_PORT=$(EGRESS_API_PORT) \
+		-p $(INGRESS_PORT):$(INGRESS_PORT) \
+		-e EGRESS_SCHEME=$(EGRESS_SCHEME) \
+		-e EGRESS_URL=echo \
+		-e EGRESS_PORT=$(EGRESS_PORT) \
 		-e MODULE_NAME=$(MODULE_NAME) \
-		-e HANDLER_HOST=$(HANDLER_HOST) \
-		-e HANDLER_PORT=$(HANDLER_PORT) \
+		-e INGRESS_HOST=$(INGRESS_HOST) \
+		-e INGRESS_PORT=$(INGRESS_PORT) \
 		--name $(MODULE_NAME) \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
 	echo "Waiting for 2 seconds..."
@@ -90,14 +92,14 @@ listentest: ## Run a listener container and receive messages from this container
 	curl --header "Content-Type: application/json" \
 		--request POST \
 		--data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
-		localhost:$(HANDLER_PORT)
+		localhost:$(INGRESS_PORT)
 	echo "Result as seen in listener:"
 	docker logs echo
 	echo "Cleanup"
 	docker container stop echo $(MODULE_NAME)
 
 run_local:
-	 python main.py
+	 python3 ./image/src/main.py
 .phony: run_local
 
 push: ## Push to dockerhub, needs credentials!
@@ -111,5 +113,5 @@ pushrm: ## Push to dockerhub AND add description, needs additionally the pushrm 
 build_and_push_multi_platform:
 	echo "Building multi platform image"
 	echo $(ACCOUNT_NAME)/$(MODULE_NAME)
-	docker buildx build --platform linux/amd64,linux/arm,linux/arm64 -t $(ACCOUNT_NAME)/$(MODULE_NAME) --push .
+	docker buildx build --platform linux/amd64,linux/arm,linux/arm64 -t $(ACCOUNT_NAME)/$(MODULE_NAME) --push . -f image/Dockerfile
 .phony: create_and_push_multi_platform
