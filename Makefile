@@ -35,33 +35,34 @@ dev:
 
 run: ## Run container on port configured in `config.env`
 	docker run --rm \
-		-p $(INGRESS_PORT):$(INGRESS_PORT) \
-		-e EGRESS_URL=$(EGRESS_URL) \
+		--network=dtestnet \
+		-p $(INGRESS_PORT)\:$(INGRESS_PORT) \
+		-e EGRESS_URL="http://echo:8000" \
 		-e MODULE_NAME=$(MODULE_NAME) \
 		-e MODULE_TYPE=$(MODULE_TYPE) \
-		-e INGRESS_HOST=0.0.0.0 \
-		-e INGRESS_PATH=$(INGRESS_PATH) \
 		-e INGRESS_PORT=$(INGRESS_PORT) \
-		$(ACCOUNT_NAME)/$(MODULE_NAME)
+		-e INGRESS_PATH=$(INGRESS_PATH) \
+		--name $(MODULE_NAME) \
+		$(ACCOUNT_NAME)/$(MODULE_NAME)	
 
 # docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)
 # run_image:
 # 	docker run -p 8000:5000 --rm boilerplate:latest
 # .phony: run_image
 
-lint:
-	pylint main.py app/
-.phony: lint
+# lint:
+# 	pylint main.py app/
+# .phony: lint
 
-install_local:
-	pip3 install -r ./image/requirements.txt
-.phony: install_local
+# install_local:
+# 	pip3 install -r ./image/requirements.txt
+# .phony: install_local
 
-curltest: ## Send sample data to the
-	curl --header "Content-Type: application/json" \
-		--request POST \
-		--data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
-		localhost:$(INGRESS_PORT)
+# curltest: ## Send sample data to the
+# 	curl --header "Content-Type: application/json" \
+# 		--request POST \
+# 		--data '{"random hash"\:"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
+# 		localhost:$(INGRESS_PORT)
 
 listentest: ## Run a listener container and receive messages from this container
 	make build
@@ -69,7 +70,7 @@ listentest: ## Run a listener container and receive messages from this container
 	echo "Starting listener container"
 	docker run --detach --rm \
 		--network=$(NETWORK_NAME)  \
-		-e PORT=$(EGRESS_PORT)  \
+		-e PORT=$(LISTEN_PORT)  \
 		-e LOG_HTTP_BODY=true \
 		-e LOG_HTTP_HEADERS=true \
 		--name echo \
@@ -78,12 +79,11 @@ listentest: ## Run a listener container and receive messages from this container
 	docker run --detach --rm \
 		--network=$(NETWORK_NAME) \
 		-p $(INGRESS_PORT):$(INGRESS_PORT) \
-		-e EGRESS_SCHEME=$(EGRESS_SCHEME) \
-		-e EGRESS_URL=echo \
-		-e EGRESS_PORT=$(EGRESS_PORT) \
+		-e EGRESS_URL=$(EGRESS_URL) \
 		-e MODULE_NAME=$(MODULE_NAME) \
-		-e INGRESS_HOST=$(INGRESS_HOST) \
+		-e MODULE_TYPE=$(MODULE_TYPE) \
 		-e INGRESS_PORT=$(INGRESS_PORT) \
+		-e INGRESS_PATH=$(INGRESS_PATH) \
 		--name $(MODULE_NAME) \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
 	echo "Waiting for 2 seconds..."
@@ -97,6 +97,10 @@ listentest: ## Run a listener container and receive messages from this container
 	docker logs echo
 	echo "Cleanup"
 	docker container stop echo $(MODULE_NAME)
+
+clean:
+	docker container stop echo $(APP_NAME)
+	docker container rm echo $(APP_NAME)
 
 run_local:
 	 python3 ./image/src/main.py

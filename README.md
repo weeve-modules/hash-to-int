@@ -49,12 +49,11 @@ In a second terminal, run the module inside the same docker network. The module 
 docker run --rm \
      --network=dtestnet \
      -p 9001:9001 \
-     -e EGRESS_SCHEME=http \
-     -e EGRESS_HOST=echo \
-     -e EGRESS_PORT=8000 \
+     -e EGRESS_URL="http://echo:8000" \
      -e MODULE_NAME=hash-to-int \
-     -e INGRESS_HOST=0.0.0.0 \
+     -e MODULE_TYPE=PROCESS \
      -e INGRESS_PORT=9001 \
+     -e INGRESS_PATH="/" \
      --name hash-to-int \
      weevenetwork/hash-to-int
 ```
@@ -66,18 +65,6 @@ curl --header "Content-Type: application/json" \
      --data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
      localhost:9001
 ```
-
-(Old):
-
-curl --header "Content-Type: application/json" \
-     --request POST \
-     --data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' \
-     localhost:9001
-curl --header "Content-Type: application/json" --request POST --data '{"random hash":"f36940fb3203f6e1b232f84eb3f796049c9cf1761a9297845e5f2453eb036f01"}' localhost:9001
-curl --request POST  http://localhost:9001
-
-
-
 # Notes
 
 This module strictly enforces the input data to be exactly of the form;
