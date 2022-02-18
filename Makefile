@@ -28,7 +28,7 @@ help: ## This help.
 # .phony: create_image
 
 build: ## Build the container
-	docker build -t $(ACCOUNT_NAME)/$(MODULE_NAME) . -f ./image/Dockerfile
+	docker build -t $(ACCOUNT_NAME)/$(APP_NAME):$(VERSION_TAG) . -f image/Dockerfile
 
 dev:
 	nodemon main.py
@@ -43,7 +43,7 @@ run: ## Run container on port configured in `config.env`
 		-e INGRESS_PORT=$(INGRESS_PORT) \
 		-e INGRESS_PATH=$(INGRESS_PATH) \
 		--name $(MODULE_NAME) \
-		$(ACCOUNT_NAME)/$(MODULE_NAME)	
+		$(ACCOUNT_NAME)/$(MODULE_NAME)
 
 # docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)
 # run_image:
@@ -107,12 +107,12 @@ run_local:
 .phony: run_local
 
 push: ## Push to dockerhub, needs credentials!
-	docker push $(ACCOUNT_NAME)/$(MODULE_NAME):latest
+	docker push $(ACCOUNT_NAME)/$(APP_NAME):$(VERSION_TAG)
 
 pushrm: ## Push to dockerhub AND add description, needs additionally the pushrm tool!
 ## https://github.com/christian-korneck/docker-pushrm
-	docker push $(ACCOUNT_NAME)/$(MODULE_NAME):latest
-	docker pushrm $(ACCOUNT_NAME)/$(MODULE_NAME):latest --short $(DESCRIPTION)
+	docker push $(ACCOUNT_NAME)/$(APP_NAME):$(VERSION_TAG)
+	docker pushrm $(ACCOUNT_NAME)/$(APP_NAME):$(VERSION_TAG) --short $(DESCRIPTION)
 
 build_and_push_multi_platform:
 	echo "Building multi platform image"

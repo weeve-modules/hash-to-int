@@ -2,7 +2,7 @@
 |              |                                                               |
 | ------------ | ------------------------------------------------------------- |
 | name         | sha256-string-to-int                                          |
-| version      | v0.0.1                                                        |
+| version      | v1.0.0                                                        |
 | docker image | [weevenetwork/hash-to-int](https://hub.docker.com/r/weevenetwork/hash-to-int) |
 | tags         | Python, Flask, Docker, Weeve                                  |
 | authors      | Marcus Jones                                                  |
