@@ -33,6 +33,14 @@ build: ## Build the container
 dev:
 	nodemon main.py
 
+listen: ## Pull and start a listener
+	docker run --detach \
+		-e PORT=$(LISTEN_PORT) \
+		-e LOG_HTTP_BODY=true \
+		-e LOG_HTTP_HEADERS=true \
+		-p $(LISTEN_PORT):$(LISTEN_PORT) \
+		--name echo jmalloc/echo-server
+
 run: ## Run container on port configured in `config.env`
 	docker run --rm --env-file=./config.env \
 		--network=dtestnet \
@@ -64,7 +72,7 @@ listentest: ## Run a listener container and receive messages from this container
 	docker network create $(NETWORK_NAME) || true
 	echo "Starting listener container"
 	docker run --detach --rm \
-		--network=$(NETWORK_NAME)  \
+		--network=$(NETWORK_NAME) \
 		-e PORT=$(LISTEN_PORT)  \
 		-e LOG_HTTP_BODY=true \
 		-e LOG_HTTP_HEADERS=true \
@@ -88,6 +96,7 @@ listentest: ## Run a listener container and receive messages from this container
 	echo "Cleanup"
 	docker container stop echo $(MODULE_NAME)
 	docker network rm $(NETWORK_NAME)
+	echo "Test done."
 
 clean:
 	docker container stop echo $(MODULE_NAME)
