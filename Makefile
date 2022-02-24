@@ -28,24 +28,27 @@ help: ## This help.
 # .phony: create_image
 
 build: ## Build the container
-	docker build -t $(ACCOUNT_NAME)/$(APP_NAME):$(VERSION_TAG) . -f image/Dockerfile
+	docker build -t $(ACCOUNT_NAME)/$(MODULE_NAME):$(VERSION_TAG) . -f image/Dockerfile
 
 dev:
 	nodemon main.py
 
+listen: ## Pull and start a listener
+	docker run --detach \
+		-e PORT=$(LISTEN_PORT) \
+		-e LOG_HTTP_BODY=true \
+		-e LOG_HTTP_HEADERS=true \
+		-p $(LISTEN_PORT):$(LISTEN_PORT) \
+		--name echo jmalloc/echo-server
+
 run: ## Run container on port configured in `config.env`
-	docker run --rm \
+	docker run --rm --env-file=./config.env \
 		--network=dtestnet \
 		-p $(INGRESS_PORT)\:$(INGRESS_PORT) \
-		-e EGRESS_URL="http://echo:8000" \
-		-e MODULE_NAME=$(MODULE_NAME) \
-		-e MODULE_TYPE=$(MODULE_TYPE) \
-		-e INGRESS_PORT=$(INGRESS_PORT) \
-		-e INGRESS_PATH=$(INGRESS_PATH) \
 		--name $(MODULE_NAME) \
 		$(ACCOUNT_NAME)/$(MODULE_NAME)
 
-# docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(APP_NAME)
+# docker run -it --rm --env-file=./config.env $(ACCOUNT_NAME)/$(MODULE_NAME)
 # run_image:
 # 	docker run -p 8000:5000 --rm boilerplate:latest
 # .phony: run_image
@@ -69,23 +72,18 @@ listentest: ## Run a listener container and receive messages from this container
 	docker network create $(NETWORK_NAME) || true
 	echo "Starting listener container"
 	docker run --detach --rm \
-		--network=$(NETWORK_NAME)  \
+		--network=$(NETWORK_NAME) \
 		-e PORT=$(LISTEN_PORT)  \
 		-e LOG_HTTP_BODY=true \
 		-e LOG_HTTP_HEADERS=true \
 		--name echo \
 		jmalloc/echo-server
 	echo "Starting module container"
-	docker run --detach --rm \
+	docker run --detach --rm --env-file=./config.env \
 		--network=$(NETWORK_NAME) \
 		-p $(INGRESS_PORT):$(INGRESS_PORT) \
-		-e EGRESS_URL=$(EGRESS_URL) \
-		-e MODULE_NAME=$(MODULE_NAME) \
-		-e MODULE_TYPE=$(MODULE_TYPE) \
-		-e INGRESS_PORT=$(INGRESS_PORT) \
-		-e INGRESS_PATH=$(INGRESS_PATH) \
 		--name $(MODULE_NAME) \
-		$(ACCOUNT_NAME)/$(MODULE_NAME)
+		$(ACCOUNT_NAME)/$(MODULE_NAME):$(VERSION_TAG)
 	echo "Waiting for 2 seconds..."
 	sleep 2
 	echo "Sending test payload"
@@ -97,22 +95,24 @@ listentest: ## Run a listener container and receive messages from this container
 	docker logs echo
 	echo "Cleanup"
 	docker container stop echo $(MODULE_NAME)
+	docker network rm $(NETWORK_NAME)
+	echo "Test done."
 
 clean:
-	docker container stop echo $(APP_NAME)
-	docker container rm echo $(APP_NAME)
+	docker container stop echo $(MODULE_NAME)
+	docker container rm echo $(MODULE_NAME)
 
 run_local:
 	 python3 ./image/src/main.py
 .phony: run_local
 
 push: ## Push to dockerhub, needs credentials!
-	docker push $(ACCOUNT_NAME)/$(APP_NAME):$(VERSION_TAG)
+	docker push $(ACCOUNT_NAME)/$(MODULE_NAME):$(VERSION_TAG)
 
 pushrm: ## Push to dockerhub AND add description, needs additionally the pushrm tool!
 ## https://github.com/christian-korneck/docker-pushrm
-	docker push $(ACCOUNT_NAME)/$(APP_NAME):$(VERSION_TAG)
-	docker pushrm $(ACCOUNT_NAME)/$(APP_NAME):$(VERSION_TAG) --short $(DESCRIPTION)
+	docker push $(ACCOUNT_NAME)/$(MODULE_NAME):$(VERSION_TAG)
+	docker pushrm $(ACCOUNT_NAME)/$(MODULE_NAME):$(VERSION_TAG) --short $(DESCRIPTION)
 
 build_and_push_multi_platform:
 	echo "Building multi platform image"
