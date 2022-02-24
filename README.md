@@ -2,7 +2,7 @@
 
 |              |                                                                               |
 | ------------ | ----------------------------------------------------------------------------- |
-| name         | sha256-string-to-int                                                          |
+| name         | hash-to-int                                                          |
 | version      | v1.0.0                                                                        |
 | docker image | [weevenetwork/hash-to-int](https://hub.docker.com/r/weevenetwork/hash-to-int) |
 | tags         | Python, Flask, Docker, Weeve                                                  |
@@ -55,12 +55,12 @@ docker run --rm \
      --network=dtestnet \
      -p 9001:9001 \
      -e EGRESS_URL="http://echo:8000" \
-     -e MODULE_NAME=sha256-string-to-int \
+     -e MODULE_NAME=hash-to-int \
      -e MODULE_TYPE=PROCESS \
      -e INGRESS_PORT=9001 \
      -e INGRESS_PATH="/" \
-     --name sha256-string-to-int \
-     weevenetwork/sha256-string-to-int
+     --name hash-to-int \
+     weevenetwork/hash-to-int
 ```
 
 In the third terminal, simulate the ingress side of the container by sending a hash value from the host into the docker network forwarded port;
