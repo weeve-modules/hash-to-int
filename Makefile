@@ -114,7 +114,7 @@ pushrm: ## Push to dockerhub AND add description, needs additionally the pushrm 
 	docker push $(ACCOUNT_NAME)/$(MODULE_NAME):$(VERSION_TAG)
 	docker pushrm $(ACCOUNT_NAME)/$(MODULE_NAME):$(VERSION_TAG) --short $(DESCRIPTION)
 
-build_and_push_multi_platform:
+create_and_push_multi_platform:
 	echo "Building multi platform image"
 	echo $(ACCOUNT_NAME)/$(MODULE_NAME)
 	docker buildx build --platform linux/amd64,linux/arm,linux/arm64 -t $(ACCOUNT_NAME)/$(MODULE_NAME) --push . -f image/Dockerfile
