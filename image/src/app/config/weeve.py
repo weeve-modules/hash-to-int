@@ -12,7 +12,7 @@ assert env("EGRESS_URL")
 # assert env("EGRESS_PORT")
 
 WEEVE = {
-    "MODULE_NAME": env("MODULE_NAME", "hash-to-int"),
+    "MODULE_NAME": env("MODULE_NAME", "sha-256-to-integer"),
     "MODULE_TYPE": env("MODULE_TYPE", "PROCESS"),
     "INGRESS_HOST": env("INGRESS_HOST", "0.0.0.0"),
     "INGRESS_PORT": env("INGRESS_PORT", "80"),

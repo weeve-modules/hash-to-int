@@ -1,7 +1,7 @@
 version: 1.0.0
-name: hash-to-int
+name: sha-256-to-integer
 description: Return the integer representation of a byte string.
-icon: https://icons-020-demo.s3.eu-central-1.amazonaws.com/mi_pythonscript_process.png
+icon: https://icons-020-demo.s3.eu-central-1.amazonaws.com/mi_hash-to-int_process.png
 type: process
 tags:
   - hash
@@ -12,7 +12,7 @@ categories:
   - id: category
     name: Experimental
 image:
-  name: weevenetwork/hash-to-int
+  name: weevenetwork/sha-256-to-integer
   tag: latest
 environments:
 document:
