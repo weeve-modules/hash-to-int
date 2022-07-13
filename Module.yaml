@@ -8,7 +8,7 @@ categories:
 type: 'Processing'
 image:
   name: 'weevenetwork/hash-to-int'
-  tag: 'latest'
+  tag: 'v1.0.0'
   homepage: 'https://hub.docker.com/r/weevenetwork/sha256-to-integer'
 repository: 'https://github.com/weevennetwork/sha256-to-integer'
 envs:
