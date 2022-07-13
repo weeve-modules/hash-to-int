@@ -1,10 +1,10 @@
-# SHA 256 into INT
+# Hash to Int
 
 |              |                                                                                           |
 | ------------ | ----------------------------------------------------------------------------------------- |
-| name         | sha256-to-integer                                                                         |
+| name         | hash-to-int                                                                         |
 | version      | v1.0.0                                                                                    |
-| docker image | [weevenetwork/sha256-to-integer](https://hub.docker.com/r/weevenetwork/sha256-to-integer) |
+| docker image | [weevenetwork/hash-to-int](https://hub.docker.com/r/weevenetwork/hash-to-int) |
 | tags         | Python, Flask, Docker, Weeve                                                              |
 | authors      | Marcus Jones                                                                              |
 
