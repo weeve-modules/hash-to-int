@@ -1,0 +1,58 @@
+version: "3.0"
+networks:
+    default:
+        name: hash_to_int_network
+services:
+    # dev_random:
+    #     image: weevenetwork/dev-random:v1.0.0
+    #     environment:
+    #         MODULE_NAME: "dev-random"
+    #         MODULE_TYPE: "Input"
+    #         VOLUME_HOST: "/dev/urandom"
+    #         VOLUME_CONTAINER: "/mnt/random"
+    #         EGRESS_URLS: "http://hash_to_int:9090/"
+    #     ports:
+    #         - 80:80
+    #     volumes:
+    #         - /dev/urandom:/mnt/random
+    #     container_name: dev_random
+
+    hash_to_int:
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile
+        container_name: hash_to_int_test_container
+        ports:
+            - 9090:9090
+        env_file:
+            - test.env
+
+
+    listener1:
+        build:
+            context: ../
+            dockerfile: test/Dockerfile.listener
+        environment:
+            HOST: "0.0.0.0"
+            PORT: "9000"
+            OUTPUT_FILE: "/app/artifacts/listener1_output.json"
+        ports:
+            - 9000:9000
+        volumes:
+            - $PWD/test/artifacts:/app/artifacts/
+        container_name: listener1
+
+
+    listener2:
+        build:
+            context: ../
+            dockerfile: test/Dockerfile.listener
+        environment:
+            HOST: "0.0.0.0"
+            PORT: "9001"
+            OUTPUT_FILE: "/app/artifacts/listener2_output.json"
+        ports:
+            - 9001:9001
+        volumes:
+            - $PWD/test/artifacts:/app/artifacts/
+        container_name: listener2
