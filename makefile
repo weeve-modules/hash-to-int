@@ -1,6 +1,6 @@
 SHELL := /bin/bash # to enable source command in run_app
 
-MODULE=weevenetwork/hash_to_int
+MODULE=weevenetwork/hash-to-int
 VERSION_NAME=v1.0.0
 
 install_dev:
@@ -21,11 +21,11 @@ create_image:
 .phony: create_image
 
 run_image:
-	docker run -p 9090:9090 --rm --name hash_to_int --env-file=./.env ${MODULE}:${VERSION_NAME}
+	docker run -p 9090:9090 --rm --name sha256_to_integer --env-file=./.env ${MODULE}:${VERSION_NAME}
 .phony: run_image
 
 debug_image:
-	docker run -p 9090:9090 --rm --name hash_to_int --env-file=./.env --entrypoint /bin/bash -it ${MODULE}:${VERSION_NAME}
+	docker run -p 9090:9090 --rm --name sha256_to_integer --env-file=./.env --entrypoint /bin/bash -it ${MODULE}:${VERSION_NAME}
 .phony: debug_image
 
 run_docker_compose:
@@ -38,7 +38,7 @@ stop_docker_compose:
 
 run_test:
 	# For more verbose output you can add [-s] option
-	pytest test/hash_to_int_test.py -v
+	pytest test/sha256_to_integer_test.py -v
 .phony: run_test
 
 push_latest:

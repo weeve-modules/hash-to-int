@@ -1,11 +1,11 @@
 version: "3.0"
 services:
-  hash_to_int:
+  sha256_to_integer:
     build:
       context: ../
       dockerfile: docker/Dockerfile
     environment:
-      MODULE_NAME: "hash-to-int"
+      MODULE_NAME: "sha256-to-integer"
       MODULE_TYPE: "Processing"
       HOST_NAME: "0.0.0.0"
       HOST_PORT: "9090"

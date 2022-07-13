@@ -1,7 +1,7 @@
 version: "3.0"
 networks:
     default:
-        name: hash_to_int_network
+        name: sha256_to_integer_network
 services:
     # dev_random:
     #     image: weevenetwork/dev-random:v1.0.0
@@ -10,18 +10,18 @@ services:
     #         MODULE_TYPE: "Input"
     #         VOLUME_HOST: "/dev/urandom"
     #         VOLUME_CONTAINER: "/mnt/random"
-    #         EGRESS_URLS: "http://hash_to_int:9090/"
+    #         EGRESS_URLS: "http://sha256_to_integer:9090/"
     #     ports:
     #         - 80:80
     #     volumes:
     #         - /dev/urandom:/mnt/random
     #     container_name: dev_random
 
-    hash_to_int:
+    sha256_to_integer:
         build:
             context: ../
             dockerfile: docker/Dockerfile
-        container_name: hash_to_int_test_container
+        container_name: sha256_to_integer_test_container
         ports:
             - 9090:9090
         env_file:
