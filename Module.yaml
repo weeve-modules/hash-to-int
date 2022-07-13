@@ -1,15 +1,15 @@
-displayName: 'Hash To Int'
-moduleName: 'sha256-to-integer'
-description: 'Return the integer representation of a byte string'
+displayName: 'hash-to-int'
+moduleName: 'hash-to-int'
+description: 'Return the integer representation of a byte string sha256.'
 versionName: 'v1.0.0'
 isPublic: true
 categories:
   - 'Experimental'
 type: 'Processing'
 image:
-  name: 'weevenetwork/sha256-to-integer'
+  name: 'weevenetwork/hash-to-int'
   tag: 'latest'
-  homepage: 'https://hub.docker.com/weevenetwork/sha256-to-integer'
+  homepage: 'https://hub.docker.com/r/weevenetwork/sha256-to-integer'
 repository: 'https://github.com/weevennetwork/sha256-to-integer'
 envs:
 ports: []
@@ -18,5 +18,4 @@ tags:
   - 'Python'
   - 'Processing'
   - 'sha256-to-integer'
-  - 'Boilerplate 1.0.0'
 icon: 'https://icons-020-demo.s3.eu-central-1.amazonaws.com/mi_hash-to-int_process.png'
