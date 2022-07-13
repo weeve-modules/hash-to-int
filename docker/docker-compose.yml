@@ -1,15 +1,15 @@
 version: "3.0"
 services:
-  sha256_to_integer:
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile
-    environment:
-      MODULE_NAME: "sha256-to-integer"
-      MODULE_TYPE: "Processing"
-      HOST_NAME: "0.0.0.0"
-      HOST_PORT: "9090"
-      EGRESS_URLS: "https://testdockercompose.free.beeceptor.com"
-      LOG_LEVEL: "DEBUG"
-    ports:
-      - 9090:9090
+    sha256_to_integer:
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile
+        environment:
+            MODULE_NAME: "sha256-to-integer"
+            MODULE_TYPE: "Processing"
+            HOST_NAME: "0.0.0.0"
+            HOST_PORT: "9090"
+            EGRESS_URLS: "https://testdockercompose.free.beeceptor.com"
+            LOG_LEVEL: "DEBUG"
+        ports:
+            - 9090:9090
