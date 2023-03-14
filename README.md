@@ -3,7 +3,7 @@
 |              |                                                                                           |
 | ------------ | ----------------------------------------------------------------------------------------- |
 | name         | hash-to-int                                                                         |
-| version      | v1.0.0                                                                                    |
+| version      | v1.0.1                                                                                    |
 | docker image | [weevenetwork/hash-to-int](https://hub.docker.com/r/weevenetwork/hash-to-int) |
 | tags         | Python, Flask, Docker, Weeve                                                              |
 | authors      | Marcus Jones                                                                              |

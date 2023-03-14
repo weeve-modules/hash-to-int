@@ -1,14 +1,14 @@
 displayName: 'hash-to-int'
 moduleName: 'hash-to-int'
 description: 'Return the integer representation of a byte string sha256.'
-versionName: 'v1.0.0'
+versionName: 'v1.0.1'
 isPublic: true
 categories:
   - 'Experimental'
 type: 'Processing'
 image:
   name: 'weevenetwork/hash-to-int'
-  tag: 'v1.0.0'
+  tag: 'v1.0.1'
   homepage: 'https://hub.docker.com/r/weevenetwork/sha256-to-integer'
 repository: 'https://github.com/weeve-modules/hash-to-int'
 envs: []
